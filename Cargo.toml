@@ -8,3 +8,4 @@ edition = "2021"
 [dependencies]
 inputbot = "0.5"
 lazy_static = "1.4.0"
+inquire = "0.5.3"

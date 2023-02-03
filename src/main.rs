@@ -1,8 +1,11 @@
 use std::{thread, sync::{Arc, Mutex}};
 use inputbot::{KeybdKey::F10Key};
+use inquire::{Select, formatter::OptionFormatter};
 
 mod right_click;
 use crate::right_click::RightClick;
+mod left_click;
+use crate::left_click::LeftClick;
 
 #[macro_use]
 extern crate lazy_static;
@@ -12,8 +15,7 @@ extern crate lazy_static;
 lazy_static! {
     static ref MC_SCRIPTS: Vec<Box<dyn MinecraftMacro + Sync>> = vec![
         Box::new(RightClick::default()),
-        Box::new(RightClick::default()),
-        Box::new(RightClick::default())
+        Box::new(LeftClick::default())
     ];
 }
 
@@ -26,19 +28,24 @@ trait MinecraftMacro {
 fn main() {
     let macro_enabled: Arc<Mutex<bool>> = Arc::new(Mutex::new(false));
 
-    println!("Use F10 to enable / disable the Macro");
+    // Preliminary selection process
+    let selection_prompt = Select::new(
+        "Select your macro!",
+        MC_SCRIPTS.iter().map(|script| script.name()).collect()
+    );
+    let selection_int = match selection_prompt.raw_prompt() {
+        Ok(ans) => ans.index,
+        _ => 0,
+    };
 
-    // Prints out a menu for each of the scripts available
-    for i in 0..MC_SCRIPTS.len() {
-        println!("{:?}", MC_SCRIPTS[i].name());
-    }
+    println!("Use F10 to enable / disable the Macro");
 
     // The macro thread
     let c_enabled = macro_enabled.clone();
     thread::spawn(move || {
         loop {            
             if *c_enabled.lock().unwrap() {
-                MC_SCRIPTS[0].macro_loop();        
+                MC_SCRIPTS[selection_int].macro_loop();        
             }
         }
     });
