@@ -1,11 +1,13 @@
-use std::{thread, sync::{Arc, Mutex}};
-use inputbot::{KeybdKey::F10Key};
-use inquire::{Select, formatter::OptionFormatter};
+use std::{thread, sync::{Arc, Mutex}, time};
+use inputbot::{KeybdKey::F10Key, KeySequence};
+use inquire::Select;
 
 mod right_click;
 use crate::right_click::RightClick;
 mod left_click;
 use crate::left_click::LeftClick;
+mod craft;
+use crate::craft::Craft;
 
 #[macro_use]
 extern crate lazy_static;
@@ -15,7 +17,8 @@ extern crate lazy_static;
 lazy_static! {
     static ref MC_SCRIPTS: Vec<Box<dyn MinecraftMacro + Sync>> = vec![
         Box::new(RightClick::default()),
-        Box::new(LeftClick::default())
+        Box::new(LeftClick::default()),
+        Box::new(Craft::default())
     ];
 }
 
