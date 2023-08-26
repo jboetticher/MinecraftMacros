@@ -8,6 +8,12 @@ mod left_click;
 use crate::left_click::LeftClick;
 mod craft;
 use crate::craft::Craft;
+mod race_achievement;
+use crate::race_achievement::RaceAchievement;
+mod bot_fishing;
+use crate::bot_fishing::BoTFishing;
+mod temp_race;
+use crate::temp_race::TempRace;
 
 #[macro_use]
 extern crate lazy_static;
@@ -18,7 +24,10 @@ lazy_static! {
     static ref MC_SCRIPTS: Vec<Box<dyn MinecraftMacro + Sync>> = vec![
         Box::new(RightClick::default()),
         Box::new(LeftClick::default()),
-        Box::new(Craft::default())
+        Box::new(Craft::default()),
+        Box::new(RaceAchievement::default()),
+        Box::new(BoTFishing::default()),
+        Box::new(TempRace::default())
     ];
 }
 
